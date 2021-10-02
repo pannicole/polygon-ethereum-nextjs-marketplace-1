@@ -8,6 +8,7 @@ import makeStyles from "@material-ui/core/styles/makeStyles";
 import AttachMoneyIcon from "@material-ui/icons/AttachMoney";
 import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
 import DashboardIcon from "@material-ui/icons/Dashboard";
+import SendIcon from "@material-ui/icons/Send";
 
 const useStyles = makeStyles(() => ({
   navBar: {
@@ -57,6 +58,12 @@ function Marketplace({ Component, pageProps }) {
               <a className={muiClasses.link}>
                 <DashboardIcon/>
                 Creator Dashboard
+              </a>
+            </Link>
+            <Link href="/send-eth">
+              <a className={muiClasses.link}>
+              <SendIcon/>
+                Send
               </a>
             </Link>
           </div>

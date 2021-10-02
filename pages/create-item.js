@@ -2,6 +2,8 @@ import { useState } from 'react'
 import { ethers } from 'ethers'
 import { create as ipfsHttpClient } from 'ipfs-http-client'
 import { useRouter } from 'next/router'
+
+//Web3/Ethereum provider solution for all wallets
 import Web3Modal from 'web3modal'
 import Button from "@material-ui/core/Button"
 import Grid from "@material-ui/core/Grid";
@@ -9,6 +11,7 @@ import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 
+//create instance of the HTTP API client
 const client = ipfsHttpClient('https://ipfs.infura.io:5001/api/v0')
 
 import {

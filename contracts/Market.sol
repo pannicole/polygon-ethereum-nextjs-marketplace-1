@@ -8,13 +8,23 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "hardhat/console.sol";
 
 contract NFTMarket is ReentrancyGuard {
+  //using Open Zeppelin Counters
+  //to keep track of itemIds and items sold
   using Counters for Counters.Counter;
   Counters.Counter private _itemIds;
   Counters.Counter private _itemsSold;
 
+  //declare a state variable of type address (160-bit value that does not allow any arithmetic operations)
   address payable owner;
   uint256 listingPrice = 0.025 ether;
 
+  //executed during creation of the contract and CANNOT BE CALLED AFTERWARDS
+  //msg is a special global variable - msg.sender is the address where the current (external) function call came from
+  //permanently stores the message sender's address to variable owner
+
+  //payable declares that the address can be sent ether
+  //a payable adderss has "balance" and "transfer" properties as well
+  //balance and transfer are called "members" of addresses
   constructor() {
     owner = payable(msg.sender);
   }
@@ -29,8 +39,15 @@ contract NFTMarket is ReentrancyGuard {
     bool sold;
   }
 
+  //creates a private state variable that mapps integers to Market Items (similar to hash tables)
+  //the way to access this is idToMarketItem[uint256]
   mapping(uint256 => MarketItem) private idToMarketItem;
 
+  //when events are called, they cause the arguments to be stored in the transaction's log (a data structure in the blockchain)
+  //add variable "indexed" to up to three parameters which adds them to a special data structure known as "topics" instead of the data part of the log
+  //topic can only hold a single word
+  //topics allow you to search for events using:
+  //web3.eth.subscribe('logs', options [, callback]) which returns a subscription isntance
   event MarketItemCreated (
     uint indexed itemId,
     address indexed nftContract,
@@ -47,6 +64,8 @@ contract NFTMarket is ReentrancyGuard {
   }
 
   /* Places an item for sale on the marketplace */
+  //createMarketItem takes in address, tokenId, and price as parameters
+  //function(paramters) internal/external pure/view/payable
   function createMarketItem(
     address nftContract,
     uint256 tokenId,
@@ -70,6 +89,7 @@ contract NFTMarket is ReentrancyGuard {
 
     IERC721(nftContract).transferFrom(msg.sender, address(this), tokenId);
 
+    //emit the event
     emit MarketItemCreated(
       itemId,
       nftContract,
@@ -128,7 +148,7 @@ contract NFTMarket is ReentrancyGuard {
         itemCount += 1;
       }
     }
-
+    //creates a new list of dynamic size called "items" in memory that contains MarketItem struct that is length itemCount
     MarketItem[] memory items = new MarketItem[](itemCount);
     for (uint i = 0; i < totalItemCount; i++) {
       if (idToMarketItem[i + 1].owner == msg.sender) {
