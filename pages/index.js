@@ -2,6 +2,11 @@ import { ethers } from 'ethers'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 import Web3Modal from "web3modal"
+import Button from "@material-ui/core/Button"
+import Grid from "@material-ui/core/Grid";
+import Typography from "@material-ui/core/Typography";
+import TextField from "@material-ui/core/TextField";
+import makeStyles from "@material-ui/core/styles/makeStyles";
 
 import {
   nftaddress, nftmarketaddress
@@ -16,12 +21,12 @@ export default function Home() {
   useEffect(() => {
     loadNFTs()
   }, [])
-  async function loadNFTs() {    
+  async function loadNFTs() {
     const provider = new ethers.providers.JsonRpcProvider()
     const tokenContract = new ethers.Contract(nftaddress, NFT.abi, provider)
     const marketContract = new ethers.Contract(nftmarketaddress, Market.abi, provider)
     const data = await marketContract.fetchMarketItems()
-    
+
     const items = await Promise.all(data.map(async i => {
       const tokenUri = await tokenContract.tokenURI(i.tokenId)
       const meta = await axios.get(tokenUri)
@@ -38,7 +43,7 @@ export default function Home() {
       return item
     }))
     setNfts(items)
-    setLoadingState('loaded') 
+    setLoadingState('loaded')
   }
   async function buyNft(nft) {
     const web3Modal = new Web3Modal()
@@ -54,26 +59,45 @@ export default function Home() {
     await transaction.wait()
     loadNFTs()
   }
-  if (loadingState === 'loaded' && !nfts.length) return (<h1 className="px-20 py-10 text-3xl">No items in marketplace</h1>)
+  if (loadingState === 'loaded' && !nfts.length) return (
+    <Grid style={{textAlign: "center", backgroundColor: "black", color: "white"}}>
+    <Typography style={{fontFamily: "reenie", fontSize: "30px"}}>No Items In Marketplace</Typography>
+  </Grid>
+  )
   return (
     <div className="flex justify-center">
       <div className="px-4" style={{ maxWidth: '1600px' }}>
+      <Grid
+          style={{
+            textAlign: "center",
+            backgroundColor: "black",
+            color: "white",
+          }}
+        >
+          <Typography style={{ fontFamily: "reenie", fontSize: "30px" }}>
+            Items for Sale
+          </Typography>
+        </Grid>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-4">
+
           {
             nfts.map((nft, i) => (
-              <div key={i} className="border shadow rounded-xl overflow-hidden">
-                <img src={nft.image} />
-                <div className="p-4">
-                  <p style={{ height: '64px' }} className="text-2xl font-semibold">{nft.name}</p>
-                  <div style={{ height: '70px', overflow: 'hidden' }}>
+              <Grid key={i} className="border shadow rounded-xl overflow-hidden"
+              style ={{padding: "10px"}}>
+                <img src={nft.image}/>
+                <Grid>
+                  <p style={{ height: '40px' }} className="text-2xl font-semibold">{nft.name}</p>
+                  <div style={{ height: '20px', overflow: 'hidden' }}>
                     <p className="text-gray-400">{nft.description}</p>
                   </div>
-                </div>
-                <div className="p-4 bg-black">
+                </Grid>
+                <Grid>
                   <p className="text-2xl mb-4 font-bold text-white">{nft.price} ETH</p>
-                  <button className="w-full bg-pink-500 text-white font-bold py-2 px-12 rounded" onClick={() => buyNft(nft)}>Buy</button>
-                </div>
-              </div>
+                  <button className="w-full text-white font-bold py-2 px-12 rounded"
+                  style = {{backgroundColor: "black"}}
+                  onClick={() => buyNft(nft)}>Buy</button>
+                </Grid>
+              </Grid>
             ))
           }
         </div>

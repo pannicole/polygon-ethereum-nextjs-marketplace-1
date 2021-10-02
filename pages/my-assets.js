@@ -2,6 +2,8 @@ import { ethers } from 'ethers'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 import Web3Modal from "web3modal"
+import Typography from "@material-ui/core/Typography";
+import Grid from "@material-ui/core/Grid";
 
 import {
   nftmarketaddress, nftaddress
@@ -24,11 +26,11 @@ export default function MyAssets() {
     const connection = await web3Modal.connect()
     const provider = new ethers.providers.Web3Provider(connection)
     const signer = provider.getSigner()
-      
+
     const marketContract = new ethers.Contract(nftmarketaddress, Market.abi, signer)
     const tokenContract = new ethers.Contract(nftaddress, NFT.abi, provider)
     const data = await marketContract.fetchMyNFTs()
-    
+
     const items = await Promise.all(data.map(async i => {
       const tokenUri = await tokenContract.tokenURI(i.tokenId)
       const meta = await axios.get(tokenUri)
@@ -43,9 +45,12 @@ export default function MyAssets() {
       return item
     }))
     setNfts(items)
-    setLoadingState('loaded') 
+    setLoadingState('loaded')
   }
-  if (loadingState === 'loaded' && !nfts.length) return (<h1 className="py-10 px-20 text-3xl">No assets owned</h1>)
+  if (loadingState === 'loaded' && !nfts.length) return (
+    <Grid style={{textAlign: "center", backgroundColor: "black", color: "white"}}>
+    <Typography style={{fontFamily: "reenie", fontSize: "30px"}}>No Assets Owned</Typography>
+  </Grid>)
   return (
     <div className="flex justify-center">
       <div className="p-4">
@@ -55,7 +60,8 @@ export default function MyAssets() {
               <div key={i} className="border shadow rounded-xl overflow-hidden">
                 <img src={nft.image} className="rounded" />
                 <div className="p-4 bg-black">
-                  <p className="text-2xl font-bold text-white">Price - {nft.price} Eth</p>
+                  <p className="text-2xl font-bold text-white">
+                    Price - {nft.price} Eth</p>
                 </div>
               </div>
             ))

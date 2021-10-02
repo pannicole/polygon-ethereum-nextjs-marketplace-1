@@ -5,7 +5,9 @@ import { useRouter } from 'next/router'
 import Web3Modal from 'web3modal'
 import Button from "@material-ui/core/Button"
 import Grid from "@material-ui/core/Grid";
+import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
+import makeStyles from "@material-ui/core/styles/makeStyles";
 
 const client = ipfsHttpClient('https://ipfs.infura.io:5001/api/v0')
 
@@ -16,10 +18,32 @@ import {
 import NFT from '../artifacts/contracts/NFT.sol/NFT.json'
 import Market from '../artifacts/contracts/Market.sol/NFTMarket.json'
 
+const useStyles = makeStyles((theme) => ({
+  formInputShort: {
+    margin: "10px",
+    width: "25rem",
+  },
+  formInputLong: {
+    margin: "10px",
+    width: "25rem"
+  },
+  formBox: {
+    display: "flex",
+    flexDirection: "column",
+    padding: "10px",
+    alignItems: "center",
+  },
+  fileChooser: {
+    margin: "10px",
+    width: "25rem",
+  }
+}));
+
 export default function CreateItem() {
   const [fileUrl, setFileUrl] = useState(null)
   const [formInput, updateFormInput] = useState({ price: '', name: '', description: '' })
   const router = useRouter()
+  const muiClasses = useStyles();
 
   async function onChange(e) {
     const file = e.target.files[0]
@@ -80,36 +104,47 @@ export default function CreateItem() {
   }
 
   return (
-    <Grid className="flex justify-center">
-      <Grid className="w-1/2 flex flex-col pb-12">
+    <Grid >
+      <Grid style={{textAlign: "center", backgroundColor: "black", color: "white"}}>
+        <Typography style={{fontFamily: "reenie", fontSize: "30px"}}>Upload Your Digital Asset</Typography>
+      </Grid>
+      <Grid className={muiClasses.formBox}>
         <TextField
+          variant= "outlined"
           placeholder="Asset Name"
-          className="mt-8 border rounded p-4"
+          className={muiClasses.formInputShort}
           onChange={e => updateFormInput({ ...formInput, name: e.target.value })}
         />
         <TextField
           placeholder="Asset Description"
-          className="mt-2 border rounded p-4"
+          variant= "outlined"
+          multiline
+          rows={4}
+          className={muiClasses.formInputLong}
           onChange={e => updateFormInput({ ...formInput, description: e.target.value })}
         />
         <TextField
           placeholder="Asset Price in Eth"
-          className="mt-2 border rounded p-4"
+          variant= "outlined"
+          className={muiClasses.formInputShort}
           onChange={e => updateFormInput({ ...formInput, price: e.target.value })}
         />
         <TextField
           type="file"
           name="Asset"
-          className="my-4"
+          className={muiClasses.fileChooser}
           onChange={onChange}
+          InputProps={{ disableUnderline: true }}
         />
         {
           fileUrl && (
             <img className="rounded mt-4" width="350" src={fileUrl} />
           )
         }
-        <Button onClick={createMarket} className="font-bold mt-4 bg-pink-500 text-white rounded p-4 shadow-lg">
-          Create Digital Asset
+        <br/>
+        <Button onClick={createMarket}
+          variant = "contained">
+          <h1 style = {{fontFamily: "reenie", fontSize: "20px", fontWeight: "bolder"}}>Create Digital Asset</h1>
         </Button>
       </Grid>
     </Grid>

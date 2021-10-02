@@ -2,13 +2,14 @@ import '../styles/globals.css'
 import Link from 'next/link'
 import Box from "@material-ui/core/Box";
 import AppBar from "@material-ui/core/AppBar";
+import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import AttachMoneyIcon from "@material-ui/icons/AttachMoney";
 import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
 import DashboardIcon from "@material-ui/icons/Dashboard";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   navBar: {
     backgroundColor: "white",
     color: "black",
@@ -61,6 +62,7 @@ function Marketplace({ Component, pageProps }) {
           </div>
         </div>
       </AppBar>
+
       <Component {...pageProps} />
     </Box>
   )
