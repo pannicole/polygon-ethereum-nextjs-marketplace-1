@@ -92,7 +92,7 @@ export default function Home() {
                   </div>
                 </Grid>
                 <Grid>
-                  <p className="text-2xl mb-4 font-bold text-white">{nft.price} ETH</p>
+                  <p className="text-2xl mb-4 font-bold text-black">{nft.price} ETH</p>
                   <button className="w-full text-white font-bold py-2 px-12 rounded"
                   style = {{backgroundColor: "black"}}
                   onClick={() => buyNft(nft)}>Buy</button>

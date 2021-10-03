@@ -101,6 +101,9 @@ export default function CreateItem() {
     let listingPrice = await contract.getListingPrice()
     listingPrice = listingPrice.toString()
 
+    //createMarketItem function from Market.sol
+    //call that with "nftaddress" which is the address where
+    //the NFT creation smart contract lives
     transaction = await contract.createMarketItem(nftaddress, tokenId, price, { value: listingPrice })
     await transaction.wait()
     router.push('/')

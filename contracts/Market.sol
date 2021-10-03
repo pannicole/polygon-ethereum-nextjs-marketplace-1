@@ -86,7 +86,7 @@ contract NFTMarket is ReentrancyGuard {
       price,
       false
     );
-
+    //address from, address to, value
     IERC721(nftContract).transferFrom(msg.sender, address(this), tokenId);
 
     //emit the event
